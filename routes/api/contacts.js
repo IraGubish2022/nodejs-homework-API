@@ -80,10 +80,11 @@ const express = require("express");
 // });
 
 const { contacts: controllers } = require('../../controllers');
-const { contactSchema } = require('../../schemas');
+// const { contactSchema } = require('../../schemas');
+const { contactJoiSchema, statusJoiSchema } = require('../../models/contact');
 const { validation } = require('../../middlewares');
 
-const validationMiddlevare = validation(contactSchema);
+//const validationMiddlevare = validation(contactSchema);
 
 const router = express.Router();
 
@@ -91,9 +92,15 @@ router.get('/', controllers.getAll);
 
 router.get('/:contactId', controllers.getById);
 
-router.post('/', validationMiddlevare, controllers.add);
+router.post('/', validation(contactJoiSchema), controllers.add);
+// router.post('/', validationMiddlevare, controllers.add);
+
+router.put('/:contactId', validation(contactJoiSchema), controllers.updateById);
+
+router.patch('/:contactId/favorite', validation(statusJoiSchema), controllers.updateStatusContact);
 
 router.delete('/:contactId', controllers.removeById);
 
-router.put('/:contactId', validationMiddlevare, controllers.updateById);
+//router.put('/:contactId', validationMiddlevare, controllers.updateById);
+
 module.exports = router;
